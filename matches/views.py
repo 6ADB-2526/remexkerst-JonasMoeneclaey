@@ -46,3 +46,15 @@ def toon_speler(request, id):
     speler = Speler.objects.get(id = id)
     return JsonResponse(model_to_dict(speler))
 
+# uitslag van de match voor 1 speler
+def uitslag_speler(request, idSpeler, matchCode):
+    speler = Speler.objects.get(id = idSpeler)
+    match = Match_Punten.objects.filter(matchCode = matchCode).get(nummerSpeler = speler.pk)
+    return JsonResponse(match.punten, safe=False)
+
+# totaal van punten voor de speler
+def tot_punten_speler(request, idSpeler):
+    speler = Speler.objects.get(id = idSpeler)
+    matches = Match_Punten.objects.filter(nummerSpeler = speler.pk).values("punten")
+    return JsonResponse(list(matches), safe=False)
+
